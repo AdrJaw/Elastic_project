@@ -45,6 +45,27 @@ PUT /logstash-2015.05.20
 }
 
 
+GET /_cat/indices/geocoordin*
+--result
+green open geocoordinates  1 1 4631 0 25.4mb 12.7mb 12.7mb
+
+
+GET geocoordinates/_count
+-- result
+{
+  "count": 4631,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  }
+}
+
+
+
+
+--------------------------------------------------------------------------------- insert data -------------------------------------------------------------------------------
 # examples of data
 
 {"index":{"_index":"geocoordinates"}}
@@ -147,3 +168,37 @@ PUT /logstash-2015.05.20
 {"@timestamp":"2015-05-18T12:42:51.881Z","ip":"244.175.140.232","extension":"jpg","response":"200","geo":{"coordinates":{"lat":38.24721639,"lon":-78.04561028},"src":"FR","dest":"TZ","srcdest":"FR:TZ"},"@tags":["success","info"],"utc_time":"2015-05-18T12:42:51.881Z","referer":"http://twitter.com/success/bryan-o-connor","agent":"Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.50 Safari/534.24","clientip":"244.175.140.232","bytes":8012,"host":"media-for-the-masses.theacademyofperformingartsandscience.org","request":"/uploads/robert-curbeam.jpg","url":"https://media-for-the-masses.theacademyofperformingartsandscience.org/uploads/robert-curbeam.jpg","@message":"244.175.140.232 - - [2015-05-18T12:42:51.881Z] \"GET /uploads/robert-curbeam.jpg HTTP/1.1\" 200 8012 \"-\" \"Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.50 Safari/534.24\"","spaces":"this   is   a   thing    with lots of     spaces       wwwwoooooo","xss":"<script>console.log(\"xss\")</script>","headings":["<h3>susan-helms</h5>","http://facebook.com/warning/fernando-caldeiro"],"links":["yuri-baturin@twitter.com","http://twitter.com/security/michael-foale","www.facebook.com"],"relatedContent":[{"url":"http://www.laweekly.com/music/grizzly-bear-make-mustaches-actually-cool-rather-than-ironically-cool-2407568","og:type":"article","og:title":"Grizzly Bear make mustaches actually cool rather than ironically cool.","og:description":"When the mustache meme became a thing.","og:url":"http://www.laweekly.com/music/grizzly-bear-make-mustaches-actually-cool-rather-than-ironically-cool-2407568","article:published_time":"2008-03-11T14:00:00-07:00","article:modified_time":"2014-11-27T09:06:06-08:00","article:section":"Music","og:site_name":"LA Weekly","twitter:title":"Grizzly Bear make mustaches actually cool rather than ironically cool.","twitter:description":"When the mustache meme became a thing.","twitter:card":"summary","twitter:site":"@laweekly"}],"machine":{"os":"win 7","ram":21474836480},"@version":"1"}
 {"index":{"_index":"geocoordinates"}}
 {"@timestamp":"2015-05-18T11:18:04.228Z","ip":"189.244.165.222","extension":"css","response":"200","geo":{"coordinates":{"lat":32.82587917,"lon":-91.187665},"src":"IN","dest":"TZ","srcdest":"IN:TZ"},"@tags":["success","info"],"utc_time":"2015-05-18T11:18:04.228Z","referer":"http://www.slate.com/success/sultan-bin-salman-bin-abdulaziz-al-saud","agent":"Mozilla/5.0 (X11; Linux x86_64; rv:6.0a1) Gecko/20110421 Firefox/6.0a1","clientip":"189.244.165.222","bytes":6199,"host":"cdn.theacademyofperformingartsandscience.org","request":"/styles/pretty-layout.css","url":"https://cdn.theacademyofperformingartsandscience.org/styles/pretty-layout.css","@message":"189.244.165.222 - - [2015-05-18T11:18:04.228Z] \"GET /styles/pretty-layout.css HTTP/1.1\" 200 6199 \"-\" \"Mozilla/5.0 (X11; Linux x86_64; rv:6.0a1) Gecko/20110421 Firefox/6.0a1\"","spaces":"this   is   a   thing    with lots of     spaces       wwwwoooooo","xss":"<script>console.log(\"xss\")</script>","headings":["<h3>janet-l-kavandi</h5>","http://www.slate.com/success/william-pailes"],"links":["eileen-collins@facebook.com","http://twitter.com/info/leonid-popov","www.www.slate.com"],"relatedContent":[{"url":"http://www.laweekly.com/news/marc-cooper-in-iowa-obama-strategist-optimistic-2391852","og:type":"article","og:title":"Marc Cooper in Iowa: Obama Strategist &quot;Optimistic&quot;","og:description":"Obama campaign top strategist David Axelrod said, &quot;He can&#039;t help but be optimistic about tonight&#039;s results.&quot; He described the energy bubbling at the Iow...","og:url":"http://www.laweekly.com/news/marc-cooper-in-iowa-obama-strategist-optimistic-2391852","article:published_time":"2008-01-03T18:31:53-08:00","article:modified_time":"2014-11-26T14:52:55-08:00","article:section":"News","og:site_name":"LA Weekly","twitter:title":"Marc Cooper in Iowa: Obama Strategist &quot;Optimistic&quot;","twitter:description":"Obama campaign top strategist David Axelrod said, &quot;He can&#039;t help but be optimistic about tonight&#039;s results.&quot; He described the energy bubbling at the Iow...","twitter:card":"summary","twitter:site":"@laweekly"}],"machine":{"os":"win 8","ram":20401094656},"@version":"1"}
+
+
+
+
+----------------------------------------------------------------------------------------Second data sets---------------------------------------------------
+
+
+# Create Shakespeare index with data types
+PUT /shakespeare
+{
+ "mappings" : {
+   "properties" : {
+    "speaker" : {"type": "keyword" },
+    "play_name" : {"type": "keyword" },
+    "line_id" : { "type" : "integer" },
+    "speech_number" : { "type" : "integer" }
+   }
+ }
+}
+
+-- results
+{
+  "acknowledged": true,
+  "shards_acknowledged": true,
+  "index": "shakespeare"
+}
+
+# Load Shakespeare data
+curl -XPOST -i -k \
+-H "Content-Type: application/x-ndjson" \
+-H "Authorization: ApiKey $ES_API_KEY" \
+$ES_HOST/shakespeare/_bulk?pretty --data-binary @shakespeare_6.0.json; echo
+
+
