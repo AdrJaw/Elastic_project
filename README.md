@@ -1,1 +1,1 @@
-# elastic_project
+# Elastic project
