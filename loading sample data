@@ -13,6 +13,36 @@ $ES_HOST/bank/_bulk?pretty --data-binary @accounts.json; echo
 
 #bank means create index of bank
 
+GET /_cat/indices
+green open bank                                                               QHQO7keBQvK_AglUg0XKyw 1 1 1000 0 746.4kb 373.2kb 373.2kb
+
+#example of data
+
+GET /bank/_doc/988
+
+{
+  "_index": "bank",
+  "_id": "988",
+  "_version": 1,
+  "_seq_no": 997,
+  "_primary_term": 1,
+  "found": true,
+  "_source": {
+    "account_number": 988,
+    "balance": 17803,
+    "firstname": "Lucy",
+    "lastname": "Castro",
+    "age": 34,
+    "gender": "F",
+    "address": "425 Fleet Walk",
+    "employer": "Geekfarm",
+    "email": "lucycastro@geekfarm.com",
+    "city": "Mulino",
+    "state": "VA"
+  }
+}
+
+#Set of data: a new index bank
 
 {"index":{"_id":"1"}}
 {"account_number":1,"balance":39225,"firstname":"Amber","lastname":"Duke","age":32,"gender":"M","address":"880 Holmes Lane","employer":"Pyrami","email":"amberduke@pyrami.com","city":"Brogan","state":"IL"}
