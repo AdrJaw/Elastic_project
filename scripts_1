@@ -1,44 +1,16 @@
 # Cluster Health Check
 
 ## Overall Cluster Health
-GET /_cat/health?v
+GET /_cat/health
 
---result
-epoch      timestamp cluster                          status node.total node.data shards pri relo init unassign unassign.pri pending_tasks max_task_wait_time active_shards_percent
-1755247421 08:43:41  b4d82d539c5848ca9082e00bb6a1ba26 green           3         2     94  47    0    0        0            0             0                  -                100.0%
 
 ## Node Health
-GET /_cat/nodes?v
-
---result
-ip          heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
-10.42.6.18            24          85   0    2.38    2.16     1.82 mv        -      tiebreaker-0000000002
-10.42.9.115           18          65   3    0.90    0.87     0.83 himrst    *      instance-0000000001
-10.42.6.180           24          64   2    0.91    0.83     0.96 himrst    -      instance-0000000000
+GET /_cat/nodes
 
 
 ## List Indices
-GET /_cat/indices?v
+GET /_cat/indices
 
---result
-health status index                                                              uuid                   pri rep docs.count docs.deleted store.size pri.store.size dataset.size
-green  open   .internal.alerts-transform.health.alerts-default-000001            1GhJXzYTSBis-G7yBwhg0w   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-observability.logs.alerts-default-000001          JJWTAH2fSVi1YE7tCZgAsQ   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-observability.uptime.alerts-default-000001        1aJsdBKFR3WBkiE6vbK0Gg   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-ml.anomaly-detection.alerts-default-000001        _lgotB6ARIGnKD-r1E1rhA   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-observability.slo.alerts-default-000001           fXR-4RwSRweOKFWSogaADg   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-default.alerts-default-000001                     RIfCJldUTMmFHnQTQRaqPA   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-streams.alerts-default-000001                     urQhFajASQieUB-dtIoW6A   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-observability.apm.alerts-default-000001           mIQJpz79Qz6Xm2dJfCN8lA   1   1          0            0       498b           249b         249b
-green  open   .ds-metrics-fleet_server.agent_status-default-2025.08.15-000001    qgg3OhkeR-m6orsoBAdlVw   1   1         13            0    331.7kb        165.8kb      165.8kb
-green  open   .internal.alerts-security.attack.discovery.alerts-default-000001   sLkml2LvSoCNDYWcLEk50w   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-observability.metrics.alerts-default-000001       Qvn5qqlOT-mdeUoSJVXoiQ   1   1          0            0       498b           249b         249b
-green  open   .ds-metrics-fleet_server.agent_versions-default-2025.08.15-000001  UsSlFUp9T--NJbMSDNAUkQ   1   1         13            0      237kb        118.5kb      118.5kb
-green  open   .internal.alerts-ml.anomaly-detection-health.alerts-default-000001 XtABynfiS4iFeFELlty-TQ   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-observability.threshold.alerts-default-000001     20GSZBCKTvi9CsYw_Uyx4g   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-security.alerts-default-000001                    c4pFKy_7S02ihSjmS98-jQ   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-dataset.quality.alerts-default-000001             9cOpO2aWQ_2TB7J4nnjHVA   1   1          0            0       498b           249b         249b
-green  open   .internal.alerts-stack.alerts-default-000001                       LMrZAcTLT0aBbMAi7CMwkA   1   1          0            0       498b           249b         249b
 
 ## Create 'sales' Index
 PUT /sales
