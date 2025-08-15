@@ -69,3 +69,31 @@ DELETE /sales
   "acknowledged": true
 }
 
+
+----------------------------------------------------------- UX/Linux shell code to insert data ---------------------------------------------------------------
+ES_HOST=""
+
+# now create API key
+# click on security then in settings "kibana" link
+# scroll down to API Keys then "Create API Key"
+# create variable in terminal
+
+ES_API_KEY=""
+
+# Create File with Requests (make sure to include new line at end of file)
+# open VI and create a file called "reqs"
+vi reqs
+
+
+## reqs is the name of the file
+# hit esc
+# type :wq to save the file and exit vi
+# type ls to see the file is there
+
+# using curl, upload data file to cluster and create index
+
+curl -XPOST -i -k \
+-H "Content-Type: application/x-ndjson" \
+-H "Authorization: ApiKey $ES_API_KEY" \
+$ES_HOST/_bulk --data-binary "@reqs"; echo      
+
