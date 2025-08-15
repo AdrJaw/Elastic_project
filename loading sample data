@@ -11,7 +11,7 @@ curl -XPOST -i -k \
 -H "Authorization: ApiKey $ES_API_KEY" \
 $ES_HOST/bank/_bulk?pretty --data-binary @accounts.json; echo
 
-
+#bank means create index of bank
 
 
 {"index":{"_id":"1"}}
