@@ -2,13 +2,14 @@
 # https://www.elastic.co/docs/explore-analyze/query-filter/languages/querydsl 
 
 
-------------------------------------------------------------------------- bank index query's -------------------------------------------------------------------------------------------------------------------------
-# 1. Find all doscument in index bank
+------------------------------------------------------------------------- Example of query and filter contexts -------------------------------------------------------------------------------------------------------------------------
+# https://www.elastic.co/docs/reference/query-languages/query-dsl/query-filter-context
+# 1. Find all doscument in the bank index
 
 GET /bank/_search
 
 #2.
-# Find all documents where city = "Nicholson"# Find all documents where city = "Nicholson"
+# Find all documents where city = "Nicholson"# Find all documents where city = "Nicholson" in the bank index
 GET /bank/_search
 {
   "query": {
@@ -19,7 +20,7 @@ GET /bank/_search
 }
 
 #3.
-# Find all documents where state = "PA" in index bank
+# Find all documents where state = "PA" in the bank index
 GET /bank/_search 
 {
   "query": {
@@ -30,7 +31,7 @@ GET /bank/_search
 }
 
 #4.
-# Find all documents where state = "CA" AND employer = "Techade" in index bank
+# Find all documents where state = "CA" AND employer = "Techade" in the bank index
 GET /bank/_search
 {
   "query": {
@@ -44,7 +45,7 @@ GET /bank/_search
 }
 
 #5.
-# Find all documents where state is NOT "CA" AND employer is NOT "Netagy" in index bank
+# Find all documents where state is NOT "CA" AND employer is NOT "Netagy" in the bank index
 GET /bank/_search 
 {
   "query": {
@@ -58,7 +59,7 @@ GET /bank/_search
 }
 
 #6.
-# Find all documents where state = "CA" BUT employer is NOT "Techade" in index bank
+# Find all documents where state = "CA" BUT employer is NOT "Techade" in the bank index
 GET /bank/_search
 {
   "query": {
@@ -74,7 +75,7 @@ GET /bank/_search
 }
 
 #7.
-# Find all documents where state = "CA" OR lastname = "Smith" in index bank
+# Find all documents where state = "CA" OR lastname = "Smith" in the bank index
 # (lastname matches have 3x higher relevance boost)
 GET bank/_search
 {
@@ -95,7 +96,7 @@ GET bank/_search
 
 ------------------------------------------------------------------------ Term-level queries ---------------------------------------------------------------------------------- 
 # https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-terms-query
-#7. Find all document where account_number = '516' in 
+#7. Find all document where account_number = '516' in the bank index
 
 GET /bank/_search
 {
@@ -106,7 +107,7 @@ GET /bank/_search
     }
   }
 
--- result of query
+-- query result
 {
   "took": 0,
   "timed_out": false,
@@ -145,7 +146,7 @@ GET /bank/_search
   }
 }
 
-# 8.  Find all document where account_number in  ('516','6') in 
+# 8.  Find all document where account_number in  ('516','6') in the bank index
 GET /bank/_search
 {
   "query": {
@@ -155,7 +156,7 @@ GET /bank/_search
   }
 }
 
--- result of query
+-- query result
 {
   "took": 0,
   "timed_out": false,
@@ -194,6 +195,105 @@ GET /bank/_search
   }
 }
 
-
 # 9. 
+#Find all bank accounts where the account number is between 516 and 851 (inclusive) in the bank index, and Elasticsearch will give these results a higher relevance weight (boosted by 2) when scoring.
+GET /bank/_search
+{
+  "query": {
+    "range": {
+      "account_number": {
+        "gte": 516,
+        "lte": 851,
+        "boost": 2
+      }
+    }
+  }
+}
 
+-- examples of query result 
+{
+  "took": 1,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 336,
+      "relation": "eq"
+    },
+    "max_score": 2,
+    "hits": [
+      {
+        "_index": "bank",
+        "_id": "518",
+        "_score": 2,
+        "_source": {
+          "account_number": 518,
+          "balance": 48954,
+          "firstname": "Finch",
+          "lastname": "Curtis",
+          "age": 29,
+          "gender": "F",
+          "address": "137 Ryder Street",
+          "employer": "Viagrand",
+          "email": "finchcurtis@viagrand.com",
+          "city": "Riverton",
+          "state": "MO"
+        }
+      },
+      {
+        "_index": "bank",
+        "_id": "520",
+        "_score": 2,
+        "_source": {
+          "account_number": 520,
+          "balance": 27987,
+          "firstname": "Brandy",
+          "lastname": "Calhoun",
+          "age": 32,
+          "gender": "M",
+          "address": "818 Harden Street",
+          "employer": "Maxemia",
+          "email": "brandycalhoun@maxemia.com",
+          "city": "Sidman",
+          "state": "OR"
+        }
+      },
+      {
+        "_index": "bank",
+        "_id": "525",
+        "_score": 2,
+        "_source": {
+          "account_number": 525,
+          "balance": 23545,
+          "firstname": "Holly",
+          "lastname": "Miles",
+          "age": 25,
+          "gender": "M",
+          "address": "746 Ludlam Place",
+          "employer": "Xurban",
+          "email": "hollymiles@xurban.com",
+          "city": "Harold",
+          "state": "AR"
+        }
+      }
+
+
+# 10. Find all document where bank accounts the customer’s age is 35 or older in the bank index
+GET bank/_search 
+{
+  "query": {
+    "range": {
+      "age": {
+        "gte": 35
+      }
+    }
+  }
+}
+
+
+  
