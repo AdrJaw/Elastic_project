@@ -1,0 +1,480 @@
+# An aggregation summarizes your data as metrics, statistics, or other analytics. Aggregations help you answer questions like:
+- What’s the average load time for my website?
+- Who are my most valuable customers based on transaction volume?
+- What would be considered a large file on my network?
+- How many products are in each product category?
+ - Elasticsearch organizes aggregations into three categories:
+
+# Metric aggregations that calculate metrics, such as a sum or average, from field values.
+-Bucket aggregations that group documents into buckets, also called bins, based on field values, ranges, or other criteria.
+- Pipeline aggregations that take input from other aggregations instead of documents or fields.
+
+# https://www.elastic.co/docs/explore-analyze/query-filter/aggregations
+
+
+------------------------------------------------------------------------- Examples of Aggregations in Elasticsearch -------------------------------------------------------------------------------------------------------------
+
+# 1. Aggregationy by unique states in the bank index, along with the number of documents (accounts) assigned to each state.  
+GET bank/_search
+{
+  "size": 0,
+  "aggs": {"states": {"terms": {"field": "state.keyword"}}}
+}
+
+
+-- query resault
+{
+  "took": 3,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1000,
+      "relation": "eq"
+    },
+    "max_score": null,
+    "hits": []
+  },
+  "aggregations": {
+    "states": {
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 743,
+      "buckets": [
+        {
+          "key": "TX",
+          "doc_count": 30
+        },
+        {
+          "key": "MD",
+          "doc_count": 28
+        },
+        {
+          "key": "ID",
+          "doc_count": 27
+        },
+        {
+          "key": "AL",
+          "doc_count": 25
+        },
+        {
+          "key": "ME",
+          "doc_count": 25
+        },
+        {
+          "key": "TN",
+          "doc_count": 25
+        },
+        {
+          "key": "WY",
+          "doc_count": 25
+        },
+        {
+          "key": "DC",
+          "doc_count": 24
+        },
+        {
+          "key": "MA",
+          "doc_count": 24
+        },
+        {
+          "key": "ND",
+          "doc_count": 24
+        }
+      ]
+    }
+  }
+}
+
+
+
+# 2. 
+GET bank/_search
+{
+  "size": 0,
+  "aggs": {"states": {"terms": {"field": "state.keyword"},
+  "aggs": {"avg_bal": {"avg": {"field": "balance"}}}
+    }
+  }
+}
+
+-- query resault
+{
+  "took": 0,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1000,
+      "relation": "eq"
+    },
+    "max_score": null,
+    "hits": []
+  },
+  "aggregations": {
+    "states": {
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 743,
+      "buckets": [
+        {
+          "key": "TX",
+          "doc_count": 30,
+          "avg_bal": {
+            "value": 26073.3
+          }
+        },
+        {
+          "key": "MD",
+          "doc_count": 28,
+          "avg_bal": {
+            "value": 26161.535714285714
+          }
+        },
+        {
+          "key": "ID",
+          "doc_count": 27,
+          "avg_bal": {
+            "value": 24368.777777777777
+          }
+        },
+        {
+          "key": "AL",
+          "doc_count": 25,
+          "avg_bal": {
+            "value": 25739.56
+          }
+        },
+        {
+          "key": "ME",
+          "doc_count": 25,
+          "avg_bal": {
+            "value": 21663
+          }
+        },
+        {
+          "key": "TN",
+          "doc_count": 25,
+          "avg_bal": {
+            "value": 28365.4
+          }
+        },
+        {
+          "key": "WY",
+          "doc_count": 25,
+          "avg_bal": {
+            "value": 21731.52
+          }
+        },
+        {
+          "key": "DC",
+          "doc_count": 24,
+          "avg_bal": {
+            "value": 23180.583333333332
+          }
+        },
+        {
+          "key": "MA",
+          "doc_count": 24,
+          "avg_bal": {
+            "value": 29600.333333333332
+          }
+        },
+        {
+          "key": "ND",
+          "doc_count": 24,
+          "avg_bal": {
+            "value": 26577.333333333332
+          }
+        }
+      ]
+    }
+  }
+}
+
+# 3.
+GET bank/_search
+{
+  "size": 0,
+  "aggs": {"states": {"terms": {"field": "state.keyword"},
+  "aggs": {"avg_bal": {"avg": {"field": "balance"}},
+  "age": {"terms": {"field": "age"}}}
+    }
+  }
+}
+
+-- example of query resault
+
+{
+  "took": 12,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1000,
+      "relation": "eq"
+    },
+    "max_score": null,
+    "hits": []
+  },
+  "aggregations": {
+    "states": {
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 743,
+      "buckets": [
+        {
+          "key": "TX",
+          "doc_count": 30,
+          "avg_bal": {
+            "value": 26073.3
+          },
+          "age": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 4,
+            "buckets": [
+              {
+                "key": 21,
+                "doc_count": 5
+              },
+              {
+                "key": 24,
+                "doc_count": 3
+              },
+              {
+                "key": 28,
+                "doc_count": 3
+              },
+              {
+                "key": 37,
+                "doc_count": 3
+              },
+              {
+                "key": 22,
+                "doc_count": 2
+              },
+              {
+                "key": 26,
+                "doc_count": 2
+              },
+              {
+                "key": 27,
+                "doc_count": 2
+              },
+              {
+                "key": 35,
+                "doc_count": 2
+              },
+              {
+                "key": 36,
+                "doc_count": 2
+              },
+              {
+                "key": 38,
+                "doc_count": 2
+              }
+            ]
+          }
+        },
+
+# 4. 
+
+GET bank/_search
+{
+  "size": 0,
+  "aggs": {"states": {"terms": {"field": "state.keyword"},
+  "aggs": {"avg_bal": {"avg": {"field": "balance"}},
+  "age": {"terms": {"field": "age"},
+  "aggs": {"avg_bal": {"avg": {"field": "balance"}
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+-- -- example of query resault
+{
+  "took": 9,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1000,
+      "relation": "eq"
+    },
+    "max_score": null,
+    "hits": []
+  },
+  "aggregations": {
+    "states": {
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 743,
+      "buckets": [
+        {
+          "key": "TX",
+          "doc_count": 30,
+          "avg_bal": {
+            "value": 26073.3
+          },
+          "age": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 4,
+            "buckets": [
+              {
+                "key": 21,
+                "doc_count": 5,
+                "avg_bal": {
+                  "value": 17251.2
+                }
+              },
+              {
+                "key": 24,
+                "doc_count": 3,
+                "avg_bal": {
+                  "value": 37200.333333333336
+                }
+              },
+              {
+                "key": 28,
+                "doc_count": 3,
+                "avg_bal": {
+                  "value": 33649.333333333336
+                }
+              },
+              {
+                "key": 37,
+                "doc_count": 3,
+                "avg_bal": {
+                  "value": 23937.666666666668
+                }
+              },
+              {
+                "key": 22,
+                "doc_count": 2,
+                "avg_bal": {
+                  "value": 23629.5
+                }
+              },
+              {
+                "key": 26,
+                "doc_count": 2,
+                "avg_bal": {
+                  "value": 27670
+                }
+              },
+              {
+                "key": 27,
+                "doc_count": 2,
+                "avg_bal": {
+                  "value": 30875
+                }
+              },
+              {
+                "key": 35,
+                "doc_count": 2,
+                "avg_bal": {
+                  "value": 25837
+                }
+              },
+              {
+                "key": 36,
+                "doc_count": 2,
+                "avg_bal": {
+                  "value": 17364.5
+                }
+              },
+              {
+                "key": 38,
+                "doc_count": 2,
+                "avg_bal": {
+                  "value": 17390
+                }
+              }
+            ]
+          }
+        }
+
+
+# 5.
+
+GET bank/_search
+{
+  "size": 1,
+  "aggs": {
+    "balance-stats": {
+      "stats": {"field":"balance"}
+    }
+  }
+}
+
+-- query resault
+{
+  "took": 0,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1000,
+      "relation": "eq"
+    },
+    "max_score": 1,
+    "hits": [
+      {
+        "_index": "bank",
+        "_id": "1",
+        "_score": 1,
+        "_source": {
+          "account_number": 1,
+          "balance": 39225,
+          "firstname": "Amber",
+          "lastname": "Duke",
+          "age": 32,
+          "gender": "M",
+          "address": "880 Holmes Lane",
+          "employer": "Pyrami",
+          "email": "amberduke@pyrami.com",
+          "city": "Brogan",
+          "state": "IL"
+        }
+      }
+    ]
+  },
+  "aggregations": {
+    "balance-stats": {
+      "count": 1000,
+      "min": 1011,
+      "max": 49989,
+      "avg": 25714.837,
+      "sum": 25714837
+    }
+  }
+}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        
