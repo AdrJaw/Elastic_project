@@ -1,4 +1,4 @@
-# 📊 Elastic project 
+# 📊 Elastic Project 
 
 ## 🇬🇧 
 This project demonstrates the use of Elasticsearch for indexing and searching data.
